@@ -11,6 +11,22 @@ namespace MultiLevelCacheSystem.Cache
     {
         private readonly Dictionary<int, CacheLevel> _cacheLevels = new Dictionary<int, CacheLevel>();
 
+        public void RemoveCacheLevel(int level)
+        {
+            if (_cacheLevels.ContainsKey(level))
+            {
+                _cacheLevels.Remove(level);
+                Console.WriteLine($"Cache level {level} removed.");
+            }
+            else
+            {
+                Console.WriteLine($"Cache level {level} not found.");
+            }
+        }
+
+
+
+
         // Create a cache level
         public void CreateCacheLevel(int levelNumber, int capacity, IEvictionPolicy evictionPolicy)
         {
@@ -28,7 +44,9 @@ namespace MultiLevelCacheSystem.Cache
             {
                 return level;
             }
-            throw new KeyNotFoundException($"Cache level {levelNumber} not found.");
+            //throw new KeyNotFoundException($"Cache level {levelNumber} not found.");
+            // Instead of throwing an exception, return null if the level is not found
+            return null;
         }
 
         // Fetch data from the cache

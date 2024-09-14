@@ -32,9 +32,16 @@ class Program
         Console.WriteLine($"Fetched item: {item?.Key ?? "Not found"}");
 
 
-        Console.WriteLine("After     caching");
+        Console.WriteLine("After  caching");
         // Display cache status
         DisplayCacheStatus(cacheManager);
+
+
+        Console.WriteLine("After deleting a cache level");
+        cacheManager.RemoveCacheLevel(4);
+
+        DisplayCacheStatus(cacheManager);
+
     }
 
 
@@ -45,11 +52,21 @@ class Program
         for (int i = 1; i <= 5; i++)
         {
             var level = cacheManager.GetCacheLevel(i);
-            Console.WriteLine($"Cache Level {i}:");
-            foreach (var item in level.GetAllItems())
+
+            if (level != null)  // Check if the cache level exists
             {
-                Console.WriteLine($"  Key: {item.Key}, Value: {item.Value}");
+                Console.WriteLine($"Cache Level {i}:");
+
+                foreach (var item in level.GetAllItems())
+                {
+                    Console.WriteLine($"  Key: {item.Key}, Value: {item.Value}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Cache Level {i} has been removed.");
             }
         }
+
     }
 }
