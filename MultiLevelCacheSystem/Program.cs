@@ -66,31 +66,32 @@ class Program
 
         // Create Cache Levels
         Console.WriteLine("Creating Cache Level 1 with capacity 2 and LRU eviction policy...");
+        Console.WriteLine("\n");
         cacheManager.CreateCacheLevel(1, 2, new LRUCacheEvictionPolicy(2));
-
+        Console.WriteLine("\n");
         Console.WriteLine("Creating Cache Level 2 with capacity 3 and LFU eviction policy...");
         cacheManager.CreateCacheLevel(2, 3, new LFUCacheEvictionPolicy(3));
-
+        Console.WriteLine("\n");
         // Add Cache Items
         Console.WriteLine("Adding items to Cache Level 1...");
         AddCacheItem(1, "key1", "value1");
         AddCacheItem(1, "key2", "value2");
         AddCacheItem(1, "key3", "value3"); // This should cause the oldest item to be evicted based on LRU policy
-
+        Console.WriteLine("\n");
         // Fetch Cache Items
         Console.WriteLine("Fetching items from Cache Level 1...");
         FetchCacheItem("key1");
         FetchCacheItem("key2");
         FetchCacheItem("key3");
-
+        Console.WriteLine("\n");
         // Display Cache Status
         Console.WriteLine("Displaying Cache Status...");
         DisplayCacheStatus();
-
+        Console.WriteLine("\n");
         // Remove Cache Level
         Console.WriteLine("Removing Cache Level 2...");
         RemoveCacheLevel(2);
-
+        Console.WriteLine("\n");
         // Display Cache Status again to verify removal
         Console.WriteLine("Displaying Cache Status after removing Cache Level 2...");
         DisplayCacheStatus();
@@ -226,8 +227,8 @@ class Program
     }
     static void Introduction()
     {
-        Console.WriteLine("Welcome to the Multi-Level Cache System!");
-        Console.WriteLine("This application demonstrates a multi-level caching system with various cache levels and eviction policies.");
+        Console.WriteLine("Welcome to the Dynamic Multi-Level Cache System!");
+        Console.WriteLine("This application demonstrates a Dynamic multi-level caching system with various cache levels and eviction policies.\n");
         Console.WriteLine("Here's a brief overview of the available functions:");
         Console.WriteLine("1. TO RUN SAMPLE TEST CASES FUCNTION");
         Console.WriteLine("2. Fetch Cache Item - Retrieves an item from the cache and promotes it to higher levels if applicable.");
@@ -235,8 +236,8 @@ class Program
         Console.WriteLine("4. Remove Cache Level - Removes a specified cache level from the system.");
         Console.WriteLine("5. Create Cache Level - Creates a new cache level with a specified capacity and eviction policy.");
         Console.WriteLine("6. Add Cache Item - Adds a new item to a specified cache level.");
-        Console.WriteLine("7. Exit - Exits the application.");
-        Console.WriteLine();
+        Console.WriteLine("7. Exit - Exits the application.\n");
+        Console.WriteLine("\n");
     }
 
 
