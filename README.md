@@ -1,17 +1,17 @@
 # Dynamic-Multilevel-Caching-System
 CapX-Backend-Developer-Internship (Assessment).
 
-Project Requirements
+# Project Requirements
 .NET Core 8
 C# Compiler
 IDE (e.g., Visual Studio, Visual Studio Code)
 
-Installing Dependencies
+# Installing Dependencies
 1>Clone the Repository
 2>Restore NuGet Packages
 
 
-Project Overview
+# Project Overview
 This project demonstrates a multi-level caching system implemented in C#. The system supports two types of eviction policies:
 
 LRU (Least Recently Used)
@@ -32,12 +32,12 @@ LFUCacheEvictionPolicy.cs: Implements the LFU eviction policy.
 
 
 
-How to Run the Application
+# How to Run the Application
 1>dotnet build
 2>dotnet run
 
 
-Interacting with the Application:
+# Interacting with the Application:
 
 Once the application is running, you can use the console menu to:
 
@@ -51,11 +51,11 @@ Exit: Closes the application.
 
 
 
-Approach and Key Decisions
+# Approach and Key Decisions
 Cache Levels: The system supports multiple cache levels, each with its own capacity and eviction policy. This design allows for flexible cache management and better control over cache performance.
 Eviction Policies: Implemented LRU and LFU eviction policies to handle cache item removal efficiently. LRU is suitable for scenarios where recently accessed items are more likely to be accessed again, while LFU is useful for scenarios where items accessed less frequently should be removed first.
 Promotion of Data: When data is fetched from a lower-level cache, it is promoted to higher levels to improve access speed. The implementation ensures that data is efficiently managed across different cache levels.
 
 
-Best Practices
+# Best Practices
 Separation of Concerns: Code is organized into distinct classes for managing different aspects of the caching system, ensuring clarity and maintainability.
