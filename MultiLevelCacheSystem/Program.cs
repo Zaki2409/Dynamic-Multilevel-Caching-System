@@ -1,72 +1,187 @@
-﻿using MultiLevelCacheSystem.Cache;
+﻿using System;
+using MultiLevelCacheSystem.Cache;
 using MultiLevelCacheSystem.Models;
 
 class Program
 {
+    private static CacheLevelManager cacheManager = new CacheLevelManager();
+
     static void Main(string[] args)
     {
-        var cacheManager = new CacheLevelManager();
 
-        // Create cache levels with different capacities and eviction policies
-        cacheManager.CreateCacheLevel(1, 2, new LRUCacheEvictionPolicy(2)); // Level 1: Capacity 2, LRU Policy
-        cacheManager.CreateCacheLevel(2, 1, new LFUCacheEvictionPolicy(1)); // Level 2: Capacity 1, LFU Policy
-        cacheManager.CreateCacheLevel(3, 1, new LRUCacheEvictionPolicy(1)); // Level 3: Capacity 1, LRU Policy
-        cacheManager.CreateCacheLevel(4, 1, new LFUCacheEvictionPolicy(1)); // Level 4: Capacity 1, LFU Policy
-        cacheManager.CreateCacheLevel(5, 1, new LRUCacheEvictionPolicy(1)); // Level 5: Capacity 1, LRU Policy
+       // Introduction();
+        while (true)
+        {
+          
+            Console.Clear();
+            Introduction();
+            Console.WriteLine("Cache System Menu:");
+            Console.WriteLine("1. Add Cache Item");
+            Console.WriteLine("2. Fetch Cache Item");
+            Console.WriteLine("3. Display Cache Status");
+            Console.WriteLine("4. Remove Cache Level");
+            Console.WriteLine("5. Create Cache Level");
+            Console.WriteLine("6. Exit");
+            Console.Write("Select an option (1-6): ");
 
-        // Adding real data to different cache levels using the Add method
-        cacheManager.GetCacheLevel(1).Add("user123", new CacheItem("user123", "John Doe, johndoe@example.com"));
-        cacheManager.GetCacheLevel(1).Add("user456", new CacheItem("user456", "Jane Smith, janesmith@example.com"));
+            var choice = Console.ReadLine();
+            switch (choice)
+            {
+                case "1":
+                    AddCacheItem();
+                    break;
+                case "2":
+                    FetchCacheItem();
+                    break;
+                case "3":
+                    DisplayCacheStatus();
+                    break;
+                case "4":
+                    RemoveCacheLevel();
+                    break;
+                case "5":
+                    CreateCacheLevel();
+                    break;
+                case "6":
+                    return; // Exit the application
+                default:
+                    Console.WriteLine("Invalid option. Please select a valid option.");
+                    break;
+            }
 
-        cacheManager.GetCacheLevel(2).Add("user789", new CacheItem("user789", "Alice Johnson, alicejohnson@example.com"));
-
-        cacheManager.GetCacheLevel(3).Add("user101", new CacheItem("user101", "Bob Brown, bobbrown@example.com"));
-
-        cacheManager.GetCacheLevel(4).Add("user102", new CacheItem("user102", "Carol Davis, caroldavis@example.com"));
-
-
-        Console.WriteLine("Before caching");
-        DisplayCacheStatus(cacheManager);
-        // Fetching data and demonstrating cache management
-        var item = cacheManager.FetchData("user789");
-        Console.WriteLine($"Fetched item: {item?.Key ?? "Not found"}");
-
-
-        Console.WriteLine("After  caching");
-        // Display cache status
-        DisplayCacheStatus(cacheManager);
-
-
-        Console.WriteLine("After deleting a cache level");
-        cacheManager.RemoveCacheLevel(4);
-
-        DisplayCacheStatus(cacheManager);
-
+            Console.WriteLine("\nPress Enter to continue...");
+            Console.ReadLine();
+        }
     }
 
+    static void CreateCacheLevel()
+    {
+        Console.Write("Enter Cache Level Number: ");
+        if (int.TryParse(Console.ReadLine(), out int levelNumber) && levelNumber > 0)
+        {
+            Console.Write("Enter Cache Capacity: ");
+            if (int.TryParse(Console.ReadLine(), out int capacity) && capacity > 0)
+            {
+                Console.WriteLine("Select Eviction Policy:");
+                Console.WriteLine("1. LRU (Least Recently Used)");
+                Console.WriteLine("2. LFU (Least Frequently Used)");
+                Console.Write("Enter your choice (1-2): ");
+
+                IEvictionPolicy evictionPolicy = null;
+                var policyChoice = Console.ReadLine();
+                switch (policyChoice)
+                {
+                    case "1":
+                        evictionPolicy = new LRUCacheEvictionPolicy(capacity);
+                        break;
+                    case "2":
+                        evictionPolicy = new LFUCacheEvictionPolicy(capacity);
+                        break;
+                    default:
+                        Console.WriteLine("Invalid choice. Defaulting to LRU policy.");
+                        evictionPolicy = new LRUCacheEvictionPolicy(capacity);
+                        break;
+                }
+
+                cacheManager.CreateCacheLevel(levelNumber, capacity, evictionPolicy);
+                Console.WriteLine("Cache level created successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Invalid capacity.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid cache level number.");
+        }
+    }
+
+    static void AddCacheItem()
+    {
+        Console.Write("Enter Cache Level (1-5): ");
+        if (int.TryParse(Console.ReadLine(), out int level) && level > 0)
+        {
+            Console.Write("Enter Key: ");
+            var key = Console.ReadLine();
+            Console.Write("Enter Value: ");
+            var value = Console.ReadLine();
+            var item = new CacheItem(key, value);
+            cacheManager.GetCacheLevel(level)?.Add(key, item);
+            Console.WriteLine("Item added successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Invalid cache level.");
+        }
+    }
+
+    static void FetchCacheItem()
+    {
+        Console.Write("Enter Key to fetch: ");
+        var key = Console.ReadLine();
+        var item = cacheManager.FetchData(key);
+        if (item != null)
+        {
+            Console.WriteLine($"Fetched item - Key: {item.Key}, Value: {item.Value}");
+        }
+        else
+        {
+            Console.WriteLine("Item not found.");
+        }
+    }
+
+    static void DisplayCacheStatus()
+    {
+        Console.WriteLine("Cache Status:");
+        DisplayCacheStatus(cacheManager);
+    }
+
+    static void RemoveCacheLevel()
+    {
+        Console.Write("Enter Cache Level to remove: ");
+        if (int.TryParse(Console.ReadLine(), out int level) && level > 0)
+        {
+            cacheManager.RemoveCacheLevel(level);
+        }
+        else
+        {
+            Console.WriteLine("Invalid cache level.");
+        }
+    }
+    static void Introduction()
+    {
+        Console.WriteLine("Welcome to the Multi-Level Cache System!");
+        Console.WriteLine("This application demonstrates a multi-level caching system with various cache levels and eviction policies.");
+        Console.WriteLine("Here's a brief overview of the available functions:");
+        Console.WriteLine("1. Add Cache Item - Adds a new item to a specified cache level.");
+        Console.WriteLine("2. Fetch Cache Item - Retrieves an item from the cache and promotes it to higher levels if applicable.");
+        Console.WriteLine("3. Display Cache Status - Displays the current status and contents of all cache levels.");
+        Console.WriteLine("4. Remove Cache Level - Removes a specified cache level from the system.");
+        Console.WriteLine("5. Create Cache Level - Creates a new cache level with a specified capacity and eviction policy.");
+        Console.WriteLine("6. Exit - Exits the application.");
+        Console.WriteLine();
+    }
 
 
     static void DisplayCacheStatus(CacheLevelManager cacheManager)
     {
-        // Example implementation to display cache levels status
-        for (int i = 1; i <= 5; i++)
+        var levels = cacheManager.GetAllCacheLevels();
+
+        if (levels.Count == 0)
         {
-            var level = cacheManager.GetCacheLevel(i);
-
-            if (level != null)  // Check if the cache level exists
-            {
-                Console.WriteLine($"Cache Level {i}:");
-
-                foreach (var item in level.GetAllItems())
-                {
-                    Console.WriteLine($"  Key: {item.Key}, Value: {item.Value}");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Cache Level {i} has been removed.");
-            }
+            Console.WriteLine("No cache levels available.");
+            return;
         }
 
+        foreach (var level in levels)
+        {
+            Console.WriteLine($"Cache Level {level.LevelNumber}:");
+
+            foreach (var item in level.GetAllItems())
+            {
+                Console.WriteLine($"  Key: {item.Key}, Value: {item.Value}");
+            }
+        }
     }
 }

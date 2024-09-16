@@ -11,6 +11,12 @@ namespace MultiLevelCacheSystem.Cache
     {
         private readonly Dictionary<int, CacheLevel> _cacheLevels = new Dictionary<int, CacheLevel>();
 
+
+        public IReadOnlyCollection<CacheLevel> GetAllCacheLevels()
+        {
+            return _cacheLevels.Values.ToList().AsReadOnly();
+        }
+
         public void RemoveCacheLevel(int level)
         {
             if (_cacheLevels.ContainsKey(level))
@@ -28,14 +34,19 @@ namespace MultiLevelCacheSystem.Cache
 
 
         // Create a cache level
-        public void CreateCacheLevel(int levelNumber, int capacity, IEvictionPolicy evictionPolicy)
+        public bool CreateCacheLevel(int levelNumber, int capacity, IEvictionPolicy evictionPolicy)
         {
             if (_cacheLevels.ContainsKey(levelNumber))
             {
-                throw new InvalidOperationException("Cache level already exists.");
+                Console.WriteLine($"Cache level {levelNumber} already exists. Please choose another level.");
+                return false; // Indicate failure
             }
+
             _cacheLevels[levelNumber] = new CacheLevel(levelNumber, capacity, evictionPolicy);
+            Console.WriteLine($"Cache level {levelNumber} created successfully.");
+            return true; // Indicate success
         }
+
 
         // Get a cache level by number
         public CacheLevel GetCacheLevel(int levelNumber)
