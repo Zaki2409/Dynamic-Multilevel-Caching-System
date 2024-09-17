@@ -1,5 +1,4 @@
 # Dynamic-Multilevel-Caching-System
-CapX-Backend-Developer-Internship (Assessment).
 
 # Project Requirements
 .NET Core 8
